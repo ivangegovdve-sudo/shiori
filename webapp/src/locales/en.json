@@ -30,6 +30,7 @@
     "library": "Library",
     "tags": "Tags",
     "settings": "Settings",
+    "admin": "Admin",
     "about": "About"
   },
   "bookmarks": {
@@ -196,5 +197,44 @@
   },
   "about": {
     "title": "This is an about page"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "dashboard": "Dashboard",
+    "dashboard_description": "Overview of system status and administration tools",
+    "system_status": "System Status",
+    "system_online": "System Online",
+    "user_management": "User Management",
+    "user_management_description": "Manage user accounts and permissions",
+    "system_settings": "System Settings",
+    "system_settings_description": "Configure system-wide settings",
+    "actions": "Admin Actions",
+    "actions_description": "Administrative functions and tools",
+    "manage_users": "Manage Users",
+    "manage_users_description": "Create, edit, and manage user accounts",
+    "system_logs": "System Logs",
+    "system_logs_description": "View system logs and activity",
+    "backup_restore": "Backup & Restore",
+    "backup_restore_description": "Create backups and restore data",
+    "statistics": "Statistics",
+    "total_users": "Total Users",
+    "total_bookmarks": "Total Bookmarks",
+    "total_tags": "Total Tags",
+    "storage_used": "Storage Used",
+    "system_info": "System Information",
+    "version_info": "Version Information",
+    "shiori_version": "Shiori Version",
+    "commit": "Commit",
+    "build_date": "Build Date",
+    "system_details": "System Details",
+    "database_engine": "Database Engine",
+    "operating_system": "Operating System",
+    "accounts": "Accounts",
+    "add_account": "Add Account",
+    "owner": "Owner",
+    "change_password": "Change Password",
+    "delete_account": "Delete Account",
+    "no_accounts": "No accounts found",
+    "no_accounts_description": "No user accounts have been created yet"
   }
 }

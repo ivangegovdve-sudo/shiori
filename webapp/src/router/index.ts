@@ -28,10 +28,10 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/settings',
-    name: 'settings',
-    component: () => import('../views/SettingsView.vue'),
-    meta: { requiresAuth: true }
+    path: '/admin',
+    name: 'admin',
+    component: () => import('../views/AdminView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: '/bookmark/:id/content',
@@ -86,7 +86,16 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
       const isValid = await authStore.validateToken()
 
       if (isValid) {
-        // Token is valid, proceed to the requested route
+        // Check if the route requires admin access
+        if (to.matched.some((record) => record.meta.requiresAdmin)) {
+          if (!authStore.user?.owner) {
+            // User is not admin, redirect to library
+            next({ name: 'library' })
+            return
+          }
+        }
+
+        // Token is valid and admin check passed, proceed to the requested route
         next()
       } else {
         // Token is invalid, redirect to login with destination

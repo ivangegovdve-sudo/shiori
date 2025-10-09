@@ -7,8 +7,8 @@ import { useI18n } from 'vue-i18n';
 import {
     BookmarksIcon,
     TagIcon,
-    SettingsIcon,
-    UserIcon
+    UserIcon,
+    AdminIcon
 } from '@/components/icons';
 
 // Define props using the compiler macro (no import needed)
@@ -31,8 +31,10 @@ interface NavItem {
 const navItems: NavItem[] = [
     { nameKey: 'navigation.library', icon: BookmarksIcon, route: '/library' },
     { nameKey: 'navigation.tags', icon: TagIcon, route: '/tags' },
-    { nameKey: 'navigation.settings', icon: SettingsIcon, route: '/settings' },
 ];
+
+// Add admin item only for admin users
+const adminNavItem: NavItem = { nameKey: 'navigation.admin', icon: AdminIcon, route: '/admin' };
 
 // Toggle menu
 const toggleMenu = () => {
@@ -84,6 +86,14 @@ onUnmounted(() => {
                         <span class="text-xs mt-1 dark:text-gray-300">{{ t(item.nameKey) }}</span>
                     </RouterLink>
 
+                    <!-- Admin link (only for admin users) -->
+                    <RouterLink v-if="authStore.user?.owner" :to="adminNavItem.route"
+                        class="text-gray-500 dark:text-gray-400 hover:text-red-500 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex flex-col items-center"
+                        :title="t(adminNavItem.nameKey)">
+                        <component :is="adminNavItem.icon" class="h-6 w-6" />
+                        <span class="text-xs mt-1 dark:text-gray-300">{{ t(adminNavItem.nameKey) }}</span>
+                    </RouterLink>
+
                     <!-- Spacer -->
                     <div class="flex-1"></div>
 
@@ -94,7 +104,7 @@ onUnmounted(() => {
                             :title="t('auth.user')">
                             <UserIcon class="h-6 w-6" />
                             <span class="text-xs mt-1 dark:text-gray-300">{{ authStore.user?.username || t('auth.user')
-                                }}</span>
+                            }}</span>
                         </button>
 
                         <!-- Dropdown Menu -->
