@@ -3,7 +3,7 @@ import { ref, onMounted, computed, onUnmounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n'
-import { Input } from '@/components/ui';
+import { Input, Button } from '@/components/ui';
 import AppLayout from '@/components/layout/AppLayout.vue';
 import Pagination from '@/components/ui/Pagination.vue';
 import ViewSelector from '@/components/ui/ViewSelector.vue';
@@ -213,11 +213,10 @@ onUnmounted(() => {
             <div class="flex justify-between items-center">
                 <h1 class="text-xl font-bold text-gray-800 dark:text-white">{{ t('bookmarks.my_bookmarks') }}</h1>
                 <div class="flex space-x-2">
-                    <button @click="$router.push('/add-bookmark')"
-                        class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 flex items-center space-x-2">
+                    <Button variant="primary" size="sm" @click="$router.push('/add-bookmark')">
                         <PlusIcon size="16" />
                         <span>{{ t('bookmarks.add_bookmark') }}</span>
-                    </button>
+                    </Button>
                     <div class="relative">
                         <Input v-model="searchKeyword" @keyup.enter="handleSearch" type="search" variant="search"
                             size="sm" :placeholder="t('bookmarks.search_placeholder')" />
@@ -316,7 +315,7 @@ onUnmounted(() => {
             </ul>
 
             <!-- Card View -->
-            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 auto-rows-fr">
                 <BookmarkCard v-for="bookmark in bookmarks" :key="bookmark.id" :bookmark="bookmark"
                     :auth-token="authStore.token || undefined" @delete="handleDeleteBookmark" />
             </div>
