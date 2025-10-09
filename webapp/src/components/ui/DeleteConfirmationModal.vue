@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { XIcon } from '@/components/icons'
+import Button from './Button.vue'
 
 interface Props {
     isOpen: boolean
@@ -32,10 +33,9 @@ const { t } = useI18n()
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                         {{ title }}
                     </h3>
-                    <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                        :disabled="isLoading">
+                    <Button variant="icon" size="xs" @click="$emit('close')" :disabled="isLoading">
                         <XIcon class="h-5 w-5" />
-                    </button>
+                    </Button>
                 </div>
 
                 <!-- Body -->
@@ -48,17 +48,12 @@ const { t } = useI18n()
 
                 <!-- Footer -->
                 <div class="flex justify-end space-x-3 p-6 border-t border-gray-200 dark:border-gray-700">
-                    <button @click="$emit('close')"
-                        class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                        :disabled="isLoading">
+                    <Button variant="secondary" @click="$emit('close')" :disabled="isLoading">
                         {{ t('common.cancel') }}
-                    </button>
-                    <button @click="$emit('confirm')"
-                        class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-                        :disabled="isLoading">
-                        <div v-if="isLoading" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        <span>{{ t('common.delete') }}</span>
-                    </button>
+                    </Button>
+                    <Button variant="danger" @click="$emit('confirm')" :loading="isLoading">
+                        {{ t('common.delete') }}
+                    </Button>
                 </div>
             </div>
         </div>

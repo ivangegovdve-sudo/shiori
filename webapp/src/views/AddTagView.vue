@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useTagsStore } from '@/stores/tags'
 import { useToast } from '@/composables/useToast'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import { Input } from '@/components/ui'
+import { TextInput, Button } from '@/components/ui'
 import { useI18n } from 'vue-i18n'
 import { useErrorHandler } from '@/utils/errorHandler'
 
@@ -83,8 +83,15 @@ const handleCancel = () => {
                         <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             {{ t('tags.name') }}
                         </label>
-                        <Input id="name" v-model="name" type="text" :placeholder="t('tags.name_placeholder')"
-                            :disabled="isLoading" class="w-full" />
+                        <TextInput
+                          id="name"
+                          v-model="name"
+                          type="text"
+                          :placeholder="t('tags.name_placeholder')"
+                          name="name"
+                          :disabled="isLoading"
+                          class="w-full"
+                        />
                     </div>
                 </div>
 
@@ -101,20 +108,12 @@ const handleCancel = () => {
 
                     <!-- Buttons (right side) -->
                     <div class="flex space-x-3">
-                        <button type="button" @click="handleCancel"
-                            class="px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300 dark:hover:bg-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 uppercase"
-                            :disabled="isLoading">
+                        <Button type="button" variant="secondary" @click="handleCancel" :disabled="isLoading">
                             {{ t('common.cancel') }}
-                        </button>
-                        <button type="button" @click="handleSubmit"
-                            class="px-4 py-2 text-sm font-semibold text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-1 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed uppercase"
-                            :disabled="isLoading || !name.trim()">
-                            <span v-if="isLoading" class="flex items-center">
-                                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                {{ t('common.processing') }}
-                            </span>
-                            <span v-else>{{ t('common.save') }}</span>
-                        </button>
+                        </Button>
+                        <Button type="button" variant="primary" @click="handleSubmit" :loading="isLoading" :disabled="!name.trim()">
+                            {{ t('common.save') }}
+                        </Button>
                     </div>
                 </div>
             </div>

@@ -6,6 +6,7 @@ import { useAuthStore } from '@/stores/auth';
 import AppLayout from '@/components/layout/AppLayout.vue';
 import { ArrowLeftIcon } from '@/components/icons';
 import BookmarkDetailHeader from '@/components/BookmarkDetailHeader.vue';
+import { Button } from '@/components/ui';
 import { useI18n } from 'vue-i18n';
 import type { ModelBookmarkDTO } from '@/client';
 
@@ -94,9 +95,9 @@ onMounted(() => {
       <!-- Error state -->
       <div v-else-if="error" class="text-center py-12">
         <p class="text-red-600 dark:text-red-400 text-lg">{{ error }}</p>
-        <button @click="goBack" class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+        <Button variant="primary" @click="goBack">
           {{ t('common.back') }}
-        </button>
+        </Button>
       </div>
 
       <!-- Content -->
@@ -114,10 +115,9 @@ onMounted(() => {
           <!-- No content message -->
           <div v-else class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 text-center">
             <p class="text-gray-600 dark:text-gray-400 mb-4">{{ t('bookmarks.no_readable_content') }}</p>
-            <button @click="goToOriginal"
-              class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">
+            <Button variant="primary" @click="goToOriginal">
               {{ t('bookmarks.view_original_page') }}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

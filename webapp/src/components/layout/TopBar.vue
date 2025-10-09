@@ -3,7 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useI18n } from 'vue-i18n'
-import { Input } from '@/components/ui';
+import { TextInput, Button } from '@/components/ui';
 import LanguageSelector from './LanguageSelector.vue';
 import { UserIcon } from '@/components/icons';
 
@@ -53,9 +53,8 @@ onUnmounted(() => {
 
     <!-- Search -->
     <div class="flex-1 mx-4">
-      <div class="relative">
-        <Input type="search" variant="search" size="sm" :placeholder="t('common.search')" />
-      </div>
+      <TextInput type="search" variant="search" size="sm" :placeholder="t('bookmarks.search_placeholder')" name="search"
+        autocomplete="off" />
     </div>
 
     <!-- Actions -->
@@ -65,11 +64,10 @@ onUnmounted(() => {
 
       <!-- User Menu -->
       <div class="relative" ref="menuRef">
-        <button @click="toggleMenu"
-          class="text-gray-500 dark:text-gray-300 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
+        <Button variant="icon" @click="toggleMenu">
           <!-- User menu icon (consistent across mobile and desktop) -->
           <UserIcon class="h-6 w-6" />
-        </button>
+        </Button>
 
         <!-- Dropdown menu -->
         <div v-if="isMenuOpen"

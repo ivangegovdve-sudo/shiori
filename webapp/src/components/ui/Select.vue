@@ -33,7 +33,7 @@ const sizeClasses = {
 }
 
 const classes = computed(() => [
-  'w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white',
+  'w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium',
   sizeClasses[props.size]
 ].join(' '))
 </script>

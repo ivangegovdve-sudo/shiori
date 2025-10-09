@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useI18n } from 'vue-i18n';
-import { Input, Checkbox } from '@/components/ui';
+import { TextInput, Checkbox, Button } from '@/components/ui';
 
 // Props for destination
 const props = defineProps<{
@@ -101,16 +101,20 @@ const redirectAfterLogin = () => {
         <form @submit.prevent="login">
           <div class="mb-6">
             <div class="flex items-center mb-4">
-              <div class="w-40 text-right mr-4 text-gray-700 dark:text-gray-300 whitespace-nowrap">{{ t('auth.username') }}:</div>
+              <div class="w-40 text-right mr-4 text-gray-700 dark:text-gray-300 whitespace-nowrap">{{ t('auth.username')
+              }}:</div>
               <div class="flex-1">
-                <Input v-model="username" type="text" variant="search" :placeholder="t('auth.username')" required />
+                <TextInput v-model="username" type="text" variant="search" :placeholder="t('auth.username')"
+                  name="username" autocomplete="username" required />
               </div>
             </div>
 
             <div class="flex items-center">
-              <div class="w-40 text-right mr-4 text-gray-700 dark:text-gray-300 whitespace-nowrap">{{ t('auth.password') }}:</div>
+              <div class="w-40 text-right mr-4 text-gray-700 dark:text-gray-300 whitespace-nowrap">{{ t('auth.password')
+              }}:</div>
               <div class="flex-1">
-                <Input v-model="password" type="password" variant="search" :placeholder="t('auth.password')" required />
+                <TextInput v-model="password" type="password" variant="search" :placeholder="t('auth.password')"
+                  name="password" autocomplete="current-password" required />
               </div>
             </div>
           </div>
@@ -122,12 +126,9 @@ const redirectAfterLogin = () => {
           </div>
 
           <div class="flex justify-center">
-            <button type="submit"
-              class="w-full bg-gray-800 dark:bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-2 uppercase font-medium"
-              :disabled="isLoading">
-              <span v-if="isLoading">{{ t('common.loading') }}</span>
-              <span v-else>{{ t('auth.login') }}</span>
-            </button>
+            <Button type="submit" variant="secondary" full-width :loading="isLoading" @click="login">
+              {{ t('auth.login') }}
+            </Button>
           </div>
         </form>
       </div>

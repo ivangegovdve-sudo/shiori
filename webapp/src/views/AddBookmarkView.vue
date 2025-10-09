@@ -5,7 +5,7 @@ import { useBookmarksStore } from '@/stores/bookmarks'
 import { useTagsStore } from '@/stores/tags'
 import { useToast } from '@/composables/useToast'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import { Input, Textarea, Select, Checkbox, TagSelector } from '@/components/ui'
+import { TextInput, Textarea, Select, Checkbox, TagSelector, Button } from '@/components/ui'
 import { useI18n } from 'vue-i18n'
 import { useErrorHandler } from '@/utils/errorHandler'
 
@@ -143,8 +143,8 @@ onMounted(async () => {
                         <label for="url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             {{ t('bookmarks.url_label') }}
                         </label>
-                        <Input id="url" v-model="url" type="url" :placeholder="t('bookmarks.url_placeholder')"
-                            :disabled="isLoading" required />
+                        <TextInput id="url" v-model="url" type="url" :placeholder="t('bookmarks.url_placeholder')"
+                            name="url" autocomplete="url" :disabled="isLoading" required />
                     </div>
 
                     <!-- Custom Title Field -->
@@ -152,8 +152,8 @@ onMounted(async () => {
                         <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             {{ t('bookmarks.custom_title_label') }}
                         </label>
-                        <Input id="title" v-model="title" type="text"
-                            :placeholder="t('bookmarks.custom_title_placeholder')" :disabled="isLoading" />
+                        <TextInput id="title" v-model="title" type="text"
+                            :placeholder="t('bookmarks.custom_title_placeholder')" name="title" :disabled="isLoading" />
                     </div>
 
                     <!-- Custom Excerpt Field -->
@@ -161,8 +161,9 @@ onMounted(async () => {
                         <label for="excerpt" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             {{ t('bookmarks.custom_excerpt_label') }}
                         </label>
-                        <Textarea id="excerpt" v-model="excerpt"
-                            :placeholder="t('bookmarks.custom_excerpt_placeholder')" :rows="3" :disabled="isLoading" />
+                        <Textarea id="excerpt" v-model="excerpt" :rows="3"
+                            :placeholder="t('bookmarks.custom_excerpt_placeholder')" name="excerpt"
+                            :disabled="isLoading" />
                     </div>
 
                     <!-- Tags Field -->
@@ -179,13 +180,13 @@ onMounted(async () => {
                         <label class="flex items-center cursor-pointer">
                             <Checkbox v-model="createArchive" :disabled="isLoading" class="mr-2" />
                             <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('bookmarks.create_archive')
-                                }}</span>
+                            }}</span>
                         </label>
 
                         <label class="flex items-center cursor-pointer">
                             <Checkbox v-model="createEbook" :disabled="isLoading" class="mr-2" />
                             <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('bookmarks.generate_ebook')
-                                }}</span>
+                            }}</span>
                         </label>
 
                         <!-- Visibility Select -->
@@ -218,20 +219,13 @@ onMounted(async () => {
 
                     <!-- Buttons (right side) -->
                     <div class="flex space-x-3">
-                        <button type="button" @click="handleCancel"
-                            class="px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300 dark:hover:bg-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 uppercase"
-                            :disabled="isLoading">
+                        <Button type="button" variant="secondary" @click="handleCancel" :disabled="isLoading">
                             {{ t('common.cancel') }}
-                        </button>
-                        <button type="button" @click="handleSubmit"
-                            class="px-4 py-2 text-sm font-semibold text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-1 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed uppercase"
-                            :disabled="isLoading || !url.trim()">
-                            <span v-if="isLoading" class="flex items-center">
-                                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                {{ t('common.processing') }}
-                            </span>
-                            <span v-else>{{ t('common.ok') }}</span>
-                        </button>
+                        </Button>
+                        <Button type="button" variant="primary" @click="handleSubmit" :loading="isLoading"
+                            :disabled="!url.trim()">
+                            {{ t('common.ok') }}
+                        </Button>
                     </div>
                 </div>
             </div>

@@ -9,11 +9,13 @@ interface Props {
   id?: string
   rows?: number
   resize?: 'none' | 'vertical' | 'horizontal' | 'both'
+  size?: 'sm' | 'md' | 'lg'
 }
 
 const props = withDefaults(defineProps<Props>(), {
   rows: 3,
-  resize: 'vertical'
+  resize: 'vertical',
+  size: 'md'
 })
 
 const emit = defineEmits<{
@@ -23,6 +25,12 @@ const emit = defineEmits<{
   input: [event: Event]
 }>()
 
+const sizeClasses = {
+  sm: 'px-2 py-1 text-sm',
+  md: 'px-3 py-2',
+  lg: 'px-4 py-3 text-lg'
+}
+
 const resizeClasses = {
   none: 'resize-none',
   vertical: 'resize-vertical',
@@ -31,7 +39,8 @@ const resizeClasses = {
 }
 
 const classes = computed(() => [
-  'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400',
+  'w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 font-medium',
+  sizeClasses[props.size],
   resizeClasses[props.resize]
 ].join(' '))
 </script>

@@ -8,7 +8,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n'
-import { Input } from '@/components/ui';
+import { TextInput, Button } from '@/components/ui';
 import { CheckIcon, XIcon, TagIcon, PencilIcon, TrashIcon, PlusIcon, SearchIcon } from '@/components/icons';
 import { useErrorHandler } from '@/utils/errorHandler';
 
@@ -33,7 +33,6 @@ const isSubmitting = ref(false);
 
 // Search functionality
 const searchQuery = ref('');
-const isSearching = ref(false);
 
 // Load tags on component mount
 onMounted(async () => {
@@ -169,7 +168,6 @@ let searchTimeout: number;
 const handleSearch = async () => {
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(async () => {
-    isSearching.value = true;
     try {
       await fetchTags({
         page: 1,
@@ -178,8 +176,6 @@ const handleSearch = async () => {
       });
     } catch (err) {
       handleApiError(err);
-    } finally {
-      isSearching.value = false;
     }
   }, 300);
 };
@@ -187,13 +183,10 @@ const handleSearch = async () => {
 // Clear search
 const clearSearch = async () => {
   searchQuery.value = '';
-  isSearching.value = true;
   try {
     await fetchTags({ page: 1, limit: pageLimit.value });
   } catch (err) {
     handleApiError(err);
-  } finally {
-    isSearching.value = false;
   }
 };
 </script>
@@ -204,18 +197,12 @@ const clearSearch = async () => {
       <div class="flex justify-between items-center">
         <h1 class="text-xl font-bold">{{ t('tags.title') }}</h1>
         <div class="flex space-x-2">
-          <button @click="navigateToAddTag"
-            class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition flex items-center space-x-2 h-8 text-sm">
+          <Button variant="primary" size="sm" @click="navigateToAddTag">
             <PlusIcon size="16" />
             <span>{{ t('tags.add_tag') }}</span>
-          </button>
-          <div class="relative">
-            <Input v-model="searchQuery" @input="handleSearch" type="search" variant="search" size="sm" class="h-8"
-              :placeholder="t('tags.search_placeholder')" />
-            <div v-if="isSearching" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-red-500"></div>
-            </div>
-          </div>
+          </Button>
+          <TextInput v-model="searchQuery" @input="handleSearch" type="search" variant="search" size="sm"
+            :placeholder="t('bookmarks.search_placeholder')" name="search" autocomplete="off" />
         </div>
       </div>
     </template>
@@ -236,11 +223,10 @@ const clearSearch = async () => {
     <!-- Empty State -->
     <div v-else-if="!isLoading && !tags.length" class="bg-white dark:bg-gray-800 p-6 rounded-md shadow-sm text-center">
       <p class="text-gray-500 dark:text-gray-400 mb-4">{{ t('tags.create_first_tag') }}</p>
-      <button @click="navigateToAddTag"
-        class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center space-x-2">
+      <Button variant="primary" @click="navigateToAddTag">
         <PlusIcon size="16" />
         <span>{{ t('tags.add_tag') }}</span>
-      </button>
+      </Button>
     </div>
 
     <!-- Tag List -->
@@ -250,18 +236,15 @@ const clearSearch = async () => {
           class="bg-white dark:bg-gray-800 p-4 rounded-md shadow-sm hover:shadow-md transition-shadow border border-gray-200 dark:border-gray-700">
           <!-- Edit Mode -->
           <div v-if="editingTagId === tag.id" class="flex items-center">
-            <Input v-model="editTagName" type="text" :disabled="isSubmitting" />
+            <TextInput v-model="editTagName" type="text" name="tagName" :disabled="isSubmitting" />
             <div class="flex ml-2 space-x-1">
-              <button @click="handleUpdateTag(tag.id!)"
-                class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-1"
-                :disabled="isSubmitting" title="Save">
+              <Button variant="icon" size="xs" @click="handleUpdateTag(tag.id!)" :disabled="isSubmitting" title="Save"
+                class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
                 <CheckIcon class="h-5 w-5" />
-              </button>
-              <button @click="cancelEdit"
-                class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 p-1"
-                :disabled="isSubmitting" title="Cancel">
+              </Button>
+              <Button variant="icon" size="xs" @click="cancelEdit" :disabled="isSubmitting" title="Cancel">
                 <XIcon class="h-5 w-5" />
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -272,21 +255,18 @@ const clearSearch = async () => {
             </div>
             <div class="flex-1">
               <h3 class="font-medium text-lg text-gray-900 dark:text-gray-100">{{ tag.name }}</h3>
-              <p class="text-sm text-gray-500 dark:text-gray-400">{{ tag.bookmarkCount || 0 }} {{
+              <p class="text-sm text-gray-500 dark:text-gray-400">{{ tag.bookmark_count || 0 }} {{
                 t('tags.bookmarks_count')
                 }}</p>
             </div>
             <div class="flex space-x-1">
-              <button @click="startEditTag(tag.id!, tag.name!)"
-                class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 p-1"
-                :title="t('common.edit')">
+              <Button variant="icon" size="xs" @click="startEditTag(tag.id!, tag.name!)" :title="t('common.edit')">
                 <PencilIcon class="h-5 w-5" />
-              </button>
-              <button @click="confirmDeleteTag(tag.id!)"
-                class="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 p-1"
-                :title="t('common.delete')">
+              </Button>
+              <Button variant="icon" size="xs" @click="confirmDeleteTag(tag.id!)" :title="t('common.delete')"
+                class="hover:text-red-500 dark:hover:text-red-400">
                 <TrashIcon class="h-5 w-5" />
-              </button>
+              </Button>
             </div>
           </div>
         </li>
@@ -303,13 +283,12 @@ const clearSearch = async () => {
         <h3 class="text-lg font-medium mb-4 text-gray-900 dark:text-gray-100">{{ t('tags.delete_tag') }}</h3>
         <p class="mb-6 text-gray-700 dark:text-gray-300">{{ t('tags.confirm_delete') }}</p>
         <div class="flex justify-end space-x-3">
-          <button @click="tagToDelete = null"
-            class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+          <Button variant="secondary" @click="tagToDelete = null">
             {{ t('common.cancel') }}
-          </button>
-          <button @click="handleDeleteTag" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+          </Button>
+          <Button variant="danger" @click="handleDeleteTag">
             {{ t('common.delete') }}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

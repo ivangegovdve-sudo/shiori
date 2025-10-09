@@ -3,7 +3,7 @@ import { ref, onMounted, computed, onUnmounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n'
-import { Input, Button } from '@/components/ui';
+import { TextInput, Button } from '@/components/ui';
 import AppLayout from '@/components/layout/AppLayout.vue';
 import Pagination from '@/components/ui/Pagination.vue';
 import ViewSelector from '@/components/ui/ViewSelector.vue';
@@ -217,10 +217,8 @@ onUnmounted(() => {
                         <PlusIcon size="16" />
                         <span>{{ t('bookmarks.add_bookmark') }}</span>
                     </Button>
-                    <div class="relative">
-                        <Input v-model="searchKeyword" @keyup.enter="handleSearch" type="search" variant="search"
-                            size="sm" :placeholder="t('bookmarks.search_placeholder')" />
-                    </div>
+                    <TextInput v-model="searchKeyword" @keyup.enter="handleSearch" type="search" variant="search"
+                        size="sm" :placeholder="t('bookmarks.search_placeholder')" name="search" autocomplete="off" />
                 </div>
             </div>
         </template>
@@ -315,7 +313,8 @@ onUnmounted(() => {
             </ul>
 
             <!-- Card View -->
-            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 auto-rows-fr">
+            <div v-else
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 auto-rows-fr">
                 <BookmarkCard v-for="bookmark in bookmarks" :key="bookmark.id" :bookmark="bookmark"
                     :auth-token="authStore.token || undefined" @delete="handleDeleteBookmark" />
             </div>
