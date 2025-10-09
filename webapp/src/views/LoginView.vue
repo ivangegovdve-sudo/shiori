@@ -101,13 +101,17 @@ const redirectAfterLogin = () => {
         <form @submit.prevent="login">
           <div class="mb-6">
             <div class="flex items-center mb-4">
-              <div class="w-28 text-right mr-4 text-gray-700 dark:text-gray-300">{{ t('auth.username') }}:</div>
-              <Input v-model="username" type="text" variant="search" :placeholder="t('auth.username')" required />
+              <div class="w-40 text-right mr-4 text-gray-700 dark:text-gray-300 whitespace-nowrap">{{ t('auth.username') }}:</div>
+              <div class="flex-1">
+                <Input v-model="username" type="text" variant="search" :placeholder="t('auth.username')" required />
+              </div>
             </div>
 
             <div class="flex items-center">
-              <div class="w-28 text-right mr-4 text-gray-700 dark:text-gray-300">{{ t('auth.password') }}:</div>
-              <Input v-model="password" type="password" variant="search" :placeholder="t('auth.password')" required />
+              <div class="w-40 text-right mr-4 text-gray-700 dark:text-gray-300 whitespace-nowrap">{{ t('auth.password') }}:</div>
+              <div class="flex-1">
+                <Input v-model="password" type="password" variant="search" :placeholder="t('auth.password')" required />
+              </div>
             </div>
           </div>
 
