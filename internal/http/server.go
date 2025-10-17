@@ -84,6 +84,10 @@ func (s *HttpServer) Setup(cfg *config.Config, deps *dependencies.Dependencies) 
 		api_v1.HandleSystemInfo,
 		globalMiddleware...,
 	))
+	s.mux.HandleFunc("GET /api/v1/system/ping", ToHTTPHandler(deps,
+		api_v1.HandleSystemPing,
+		globalMiddleware...,
+	))
 
 	// Legacy API routes
 	// TODO: Remove this once the legacy API is removed

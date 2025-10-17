@@ -801,6 +801,23 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/system/ping": {
+            "get": {
+                "description": "Simple ping endpoint that returns a 200 status code",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "System"
+                ],
+                "summary": "Ping the system",
+                "responses": {
+                    "200": {
+                        "description": "Pong"
+                    }
+                }
+            }
+        },
         "/api/v1/tags": {
             "get": {
                 "description": "List all tags with pagination",

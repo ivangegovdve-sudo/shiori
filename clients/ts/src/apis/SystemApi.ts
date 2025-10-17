@@ -58,4 +58,34 @@ export class SystemApi extends runtime.BaseAPI {
         return await response.value();
     }
 
+    /**
+     * Simple ping endpoint that returns a 200 status code
+     * Ping the system
+     */
+    async apiV1SystemPingGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/api/v1/system/ping`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Simple ping endpoint that returns a 200 status code
+     * Ping the system
+     */
+    async apiV1SystemPingGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiV1SystemPingGetRaw(initOverrides);
+    }
+
 }
