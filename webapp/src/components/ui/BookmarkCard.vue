@@ -84,7 +84,8 @@ const handleEditClick = () => {
 
         <!-- Actions pinned to bottom -->
         <div class="px-4 pb-4 flex justify-end space-x-2">
-            <Button v-if="props.bookmark.url" variant="link" :href="props.bookmark.url" target="_blank" @click.stop>
+            <Button v-if="props.bookmark.url" variant="icon" size="xs" :href="props.bookmark.url" target="_blank"
+                @click.stop>
                 <span class="sr-only">{{ t('bookmarks.open_original_url') }}</span>
                 <ExternalLinkIcon class="h-4 w-4" />
             </Button>
@@ -92,7 +93,8 @@ const handleEditClick = () => {
                 <span class="sr-only">{{ t('bookmarks.edit_bookmark_action') }}</span>
                 <PencilIcon class="h-4 w-4" />
             </Button>
-            <Button variant="icon" size="xs" @click.stop="handleDeleteClick" class="hover:text-red-500 dark:hover:text-red-400">
+            <Button variant="icon" size="xs" @click.stop="handleDeleteClick"
+                class="hover:text-red-500 dark:hover:text-red-400">
                 <span class="sr-only">{{ t('bookmarks.delete_bookmark_action') }}</span>
                 <TrashIcon class="h-4 w-4" />
             </Button>
