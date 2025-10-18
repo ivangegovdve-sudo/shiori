@@ -26,4 +26,10 @@ export { default as TagIcon } from './TagIcon.vue';
 export { default as TrashIcon } from './TrashIcon.vue';
 export { default as UserIcon } from './UserIcon.vue';
 export { default as XIcon } from './XIcon.vue';
+export { default as AdminIcon } from './AdminIcon.vue';
+export { default as GlobeIcon } from './GlobeIcon.vue';
+export { default as DocumentIcon } from './DocumentIcon.vue';
+export { default as UsersIcon } from './UsersIcon.vue';
+export { default as CogIcon } from './CogIcon.vue';
+export { default as ChartBarIcon } from './ChartBarIcon.vue';
 

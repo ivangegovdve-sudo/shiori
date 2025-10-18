@@ -1,20 +1,6 @@
-<script setup lang="ts">
-interface Props {
-    size?: string | number;
-    class?: string;
-}
-
-withDefaults(defineProps<Props>(), {
-    size: 20,
-    class: ''
-});
-</script>
-
 <template>
-    <svg xmlns="http://www.w3.org/2000/svg" :width="size" :height="size" :class="class" viewBox="0 0 20 20"
-        fill="currentColor">
-        <path fill-rule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-            clip-rule="evenodd" />
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
 </template>
