@@ -83,15 +83,8 @@ const handleCancel = () => {
                         <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             {{ t('tags.name') }}
                         </label>
-                        <TextInput
-                          id="name"
-                          v-model="name"
-                          type="text"
-                          :placeholder="t('tags.name_placeholder')"
-                          name="name"
-                          :disabled="isLoading"
-                          class="w-full"
-                        />
+                        <TextInput id="name" v-model="name" type="text" :placeholder="t('tags.name_placeholder')"
+                            name="name" :disabled="isLoading" class="w-full" />
                     </div>
                 </div>
 
@@ -111,7 +104,8 @@ const handleCancel = () => {
                         <Button type="button" variant="secondary" @click="handleCancel" :disabled="isLoading">
                             {{ t('common.cancel') }}
                         </Button>
-                        <Button type="button" variant="primary" @click="handleSubmit" :loading="isLoading" :disabled="!name.trim()">
+                        <Button type="button" variant="primary" @click="handleSubmit" :loading="isLoading"
+                            :disabled="!name.trim()">
                             {{ t('common.save') }}
                         </Button>
                     </div>

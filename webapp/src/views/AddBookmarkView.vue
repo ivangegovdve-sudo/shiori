@@ -180,13 +180,13 @@ onMounted(async () => {
                         <label class="flex items-center cursor-pointer">
                             <Checkbox v-model="createArchive" :disabled="isLoading" class="mr-2" />
                             <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('bookmarks.create_archive')
-                            }}</span>
+                                }}</span>
                         </label>
 
                         <label class="flex items-center cursor-pointer">
                             <Checkbox v-model="createEbook" :disabled="isLoading" class="mr-2" />
                             <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('bookmarks.generate_ebook')
-                            }}</span>
+                                }}</span>
                         </label>
 
                         <!-- Visibility Select -->

@@ -3,7 +3,7 @@ import AppLayout from '@/components/layout/AppLayout.vue';
 import { useI18n } from 'vue-i18n';
 import { computed, onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { AdminIcon } from '@/components/icons';
 import { SystemApi, AccountsApi } from '@/client';
 import type { ApiV1InfoResponse, ModelAccountDTO } from '@/client';
@@ -12,9 +12,13 @@ import { getApiConfig } from '@/utils/api-config';
 const { t } = useI18n();
 const authStore = useAuthStore();
 const router = useRouter();
+const route = useRoute();
 
-// Tab management
-const activeTab = ref<'system' | 'users'>('system');
+// Tab management - determine active tab from route
+const activeTab = computed(() => {
+    if (route.path === '/admin/users') return 'users';
+    return 'system';
+});
 
 // System information state
 const systemInfo = ref<ApiV1InfoResponse | null>(null);
@@ -90,7 +94,7 @@ onMounted(async () => {
             <div class="bg-white dark:bg-gray-800 rounded-md shadow-sm">
                 <div class="border-b border-gray-200 dark:border-gray-700">
                     <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
-                        <button @click="activeTab = 'system'" :class="[
+                        <button @click="router.push('/admin')" :class="[
                             activeTab === 'system'
                                 ? 'border-red-500 text-red-600 dark:text-red-400'
                                 : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600',
@@ -102,7 +106,7 @@ onMounted(async () => {
                             </svg>
                             {{ t('admin.system_info') }}
                         </button>
-                        <button @click="activeTab = 'users'; loadAccounts()" :class="[
+                        <button @click="router.push('/admin/users'); loadAccounts()" :class="[
                             activeTab === 'users'
                                 ? 'border-red-500 text-red-600 dark:text-red-400'
                                 : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600',
@@ -160,22 +164,22 @@ onMounted(async () => {
                                     <div class="space-y-2 text-sm">
                                         <div class="flex justify-between">
                                             <span class="text-gray-600 dark:text-gray-400">{{ t('admin.shiori_version')
-                                                }}:</span>
+                                            }}:</span>
                                             <span class="font-mono text-gray-900 dark:text-white">{{
                                                 systemInfo.version?.tag ||
                                                 'Unknown' }}</span>
                                         </div>
                                         <div v-if="systemInfo.version?.commit" class="flex justify-between">
                                             <span class="text-gray-600 dark:text-gray-400">{{ t('admin.commit')
-                                                }}:</span>
+                                            }}:</span>
                                             <span class="font-mono text-gray-900 dark:text-white">{{
                                                 systemInfo.version.commit.substring(0, 8) }}</span>
                                         </div>
                                         <div v-if="systemInfo.version?.date" class="flex justify-between">
                                             <span class="text-gray-600 dark:text-gray-400">{{ t('admin.build_date')
-                                                }}:</span>
+                                            }}:</span>
                                             <span class="text-gray-900 dark:text-white">{{ systemInfo.version.date
-                                                }}</span>
+                                            }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -188,17 +192,17 @@ onMounted(async () => {
                                     <div class="space-y-2 text-sm">
                                         <div class="flex justify-between">
                                             <span class="text-gray-600 dark:text-gray-400">{{ t('admin.database_engine')
-                                                }}:</span>
+                                            }}:</span>
                                             <span class="text-gray-900 dark:text-white">{{ systemInfo.database ||
                                                 'Unknown'
-                                                }}</span>
+                                            }}</span>
                                         </div>
                                         <div class="flex justify-between">
                                             <span class="text-gray-600 dark:text-gray-400">{{
                                                 t('admin.operating_system')
-                                                }}:</span>
+                                            }}:</span>
                                             <span class="text-gray-900 dark:text-white">{{ systemInfo.os || 'Unknown'
-                                                }}</span>
+                                            }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -308,7 +312,7 @@ onMounted(async () => {
                                     d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                             </svg>
                             <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">{{ t('admin.no_accounts')
-                                }}</h3>
+                            }}</h3>
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{
                                 t('admin.no_accounts_description') }}
                             </p>

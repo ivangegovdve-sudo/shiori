@@ -102,7 +102,7 @@ const redirectAfterLogin = () => {
           <div class="mb-6">
             <div class="flex items-center mb-4">
               <div class="w-40 text-right mr-4 text-gray-700 dark:text-gray-300 whitespace-nowrap">{{ t('auth.username')
-                }}:</div>
+              }}:</div>
               <div class="flex-1">
                 <TextInput v-model="username" type="text" variant="search" :placeholder="t('auth.username')"
                   name="username" autocomplete="username" required />
@@ -111,7 +111,7 @@ const redirectAfterLogin = () => {
 
             <div class="flex items-center">
               <div class="w-40 text-right mr-4 text-gray-700 dark:text-gray-300 whitespace-nowrap">{{ t('auth.password')
-                }}:</div>
+              }}:</div>
               <div class="flex-1">
                 <TextInput v-model="password" type="password" variant="search" :placeholder="t('auth.password')"
                   name="password" autocomplete="current-password" required />
