@@ -75,6 +75,10 @@ onUnmounted(() => {
           <div class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
             {{ authStore.user?.username || 'User' }}
           </div>
+          <RouterLink to="/settings"
+            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+            {{ t('navigation.settings') }}
+          </RouterLink>
           <hr class="border-gray-200 dark:border-gray-700">
           <a href="#" @click.prevent="handleLogout"
             class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
