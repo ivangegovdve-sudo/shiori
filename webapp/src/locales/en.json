@@ -31,7 +31,12 @@
     "tags": "Tags",
     "settings": "Settings",
     "admin": "Admin",
-    "about": "About"
+    "about": "About",
+    "all_bookmarks": "All Bookmarks",
+    "websites": "Websites",
+    "pdfs": "PDFs",
+    "documents": "Documents",
+    "archived": "Archived"
   },
   "bookmarks": {
     "title": "Bookmarks",

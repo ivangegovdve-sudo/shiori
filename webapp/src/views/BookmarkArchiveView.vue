@@ -85,7 +85,8 @@ const resizeIframe = () => {
   if (iframeRef.value) {
     try {
       const iframe = iframeRef.value;
-      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+      const iframeDoc =
+        iframe.contentDocument || iframe.contentWindow?.document;
 
       if (iframeDoc) {
         // Get the height of the content
@@ -122,8 +123,12 @@ onMounted(() => {
     <div class="w-full">
       <!-- Loading state -->
       <div v-if="isLoading" class="text-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-        <p class="text-gray-600 dark:text-gray-400">{{ t('common.loading') }}</p>
+        <div
+          class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"
+        ></div>
+        <p class="text-gray-600 dark:text-gray-400">
+          {{ t('common.loading') }}
+        </p>
       </div>
 
       <!-- Error state -->
@@ -137,15 +142,29 @@ onMounted(() => {
       <!-- Archive Content -->
       <div v-else-if="bookmark" class="space-y-6">
         <!-- Header -->
-        <BookmarkDetailHeader :bookmark="bookmark" :show-download-ebook-button="true" :show-view-content-button="true"
-          :show-archive-indicator="true" container-class="mx-6" @download-ebook="downloadEbook"
-          @view-content="goToContent" @open-original="goToOriginal" />
+        <BookmarkDetailHeader
+          :bookmark="bookmark"
+          :show-download-ebook-button="true"
+          :show-view-content-button="true"
+          :show-archive-indicator="true"
+          container-class="mx-6"
+          @download-ebook="downloadEbook"
+          @view-content="goToContent"
+          @open-original="goToOriginal"
+        />
 
         <!-- Archive Frame -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden mx-6">
+        <div
+          class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden mx-6"
+        >
           <div class="min-h-[600px]">
-            <iframe ref="iframeRef" :src="`/bookmark/${bookmarkId}/archive/file/`" class="w-full border-0"
-              :title="t('bookmarks.archived_content')" @load="onIframeLoad"></iframe>
+            <iframe
+              ref="iframeRef"
+              :src="`/bookmark/${bookmarkId}/archive/file/`"
+              class="w-full border-0"
+              :title="t('bookmarks.archived_content')"
+              @load="onIframeLoad"
+            ></iframe>
           </div>
         </div>
       </div>

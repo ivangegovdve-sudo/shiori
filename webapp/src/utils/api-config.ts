@@ -1,5 +1,5 @@
-import { Configuration } from '@/client/runtime'
-import { getApiBaseUrl } from './env-config'
+import { Configuration } from '@/client/runtime';
+import { getApiBaseUrl } from './env-config';
 
 /**
  * Get API configuration for the generated TypeScript client
@@ -12,9 +12,11 @@ export const getApiConfig = (token?: string | null): Configuration => {
   return new Configuration({
     basePath: getApiBaseUrl(),
     accessToken: token || undefined,
-    headers: token ? {
-      'Authorization': `Bearer ${token}`,
-      'X-Shiori-Response-Format': 'new'
-    } : undefined
-  })
-}
+    headers: token
+      ? {
+          Authorization: `Bearer ${token}`,
+          'X-Shiori-Response-Format': 'new',
+        }
+      : undefined,
+  });
+};

@@ -7,9 +7,17 @@ import { useToast } from '@/composables/useToast';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 import { TextInput, Button } from '@/components/ui';
-import { CheckIcon, XIcon, TagIcon, PencilIcon, TrashIcon, PlusIcon, SearchIcon } from '@/components/icons';
+import {
+  CheckIcon,
+  XIcon,
+  TagIcon,
+  PencilIcon,
+  TrashIcon,
+  PlusIcon,
+  SearchIcon,
+} from '@/components/icons';
 import { useErrorHandler } from '@/utils/errorHandler';
 
 const { t } = useI18n();
@@ -18,7 +26,8 @@ const authStore = useAuthStore();
 const router = useRouter();
 const { handleApiError: handleApiErrorWithI18n } = useErrorHandler();
 const { success, error: showErrorToast } = useToast();
-const { tags, isLoading, error, totalCount, currentPage, pageLimit } = storeToRefs(tagsStore);
+const { tags, isLoading, error, totalCount, currentPage, pageLimit } =
+  storeToRefs(tagsStore);
 const { fetchTags, createTag, updateTag, deleteTag } = tagsStore;
 
 // Navigation to add tag view
@@ -43,7 +52,7 @@ onMounted(async () => {
       const isValid = await authStore.validateToken();
       if (isValid) {
         await fetchTags();
-        console.log("tags", tags);
+        console.log('tags', tags);
       } else {
         authStore.setRedirectDestination('/tags');
         router.push('/login');
@@ -65,7 +74,6 @@ const handleApiError = (err: any) => {
     router.push('/login');
   }
 };
-
 
 // Start editing a tag
 const startEditTag = (id: number, name: string) => {
@@ -172,7 +180,7 @@ const handleSearch = async () => {
       await fetchTags({
         page: 1,
         limit: pageLimit.value,
-        search: searchQuery.value.trim() || undefined
+        search: searchQuery.value.trim() || undefined,
       });
     } catch (err) {
       handleApiError(err);
@@ -201,28 +209,46 @@ const clearSearch = async () => {
             <PlusIcon size="16" />
             <span>{{ t('tags.add_tag') }}</span>
           </Button>
-          <TextInput v-model="searchQuery" @input="handleSearch" type="search" variant="search" size="sm"
-            :placeholder="t('bookmarks.search_placeholder')" name="search" autocomplete="off" />
+          <TextInput
+            v-model="searchQuery"
+            @input="handleSearch"
+            type="search"
+            variant="search"
+            size="sm"
+            :placeholder="t('bookmarks.search_placeholder')"
+            name="search"
+            autocomplete="off"
+          />
         </div>
       </div>
     </template>
 
-
     <!-- Error Message -->
-    <div v-if="error"
-      class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-md mb-6">
+    <div
+      v-if="error"
+      class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-md mb-6"
+    >
       {{ error }}
     </div>
 
     <!-- Loading State -->
-    <div v-if="isLoading && !tags.length"
-      class="bg-white dark:bg-gray-800 p-6 rounded-md shadow-sm flex justify-center">
-      <div class="animate-pulse text-gray-500 dark:text-gray-400">{{ t('common.loading') }}</div>
+    <div
+      v-if="isLoading && !tags.length"
+      class="bg-white dark:bg-gray-800 p-6 rounded-md shadow-sm flex justify-center"
+    >
+      <div class="animate-pulse text-gray-500 dark:text-gray-400">
+        {{ t('common.loading') }}
+      </div>
     </div>
 
     <!-- Empty State -->
-    <div v-else-if="!isLoading && !tags.length" class="bg-white dark:bg-gray-800 p-6 rounded-md shadow-sm text-center">
-      <p class="text-gray-500 dark:text-gray-400 mb-4">{{ t('tags.create_first_tag') }}</p>
+    <div
+      v-else-if="!isLoading && !tags.length"
+      class="bg-white dark:bg-gray-800 p-6 rounded-md shadow-sm text-center"
+    >
+      <p class="text-gray-500 dark:text-gray-400 mb-4">
+        {{ t('tags.create_first_tag') }}
+      </p>
       <Button variant="primary" @click="navigateToAddTag">
         <PlusIcon size="16" />
         <span>{{ t('tags.add_tag') }}</span>
@@ -232,17 +258,37 @@ const clearSearch = async () => {
     <!-- Tag List -->
     <div v-else class="mt-6">
       <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <li v-for="tag in tags" :key="tag.id"
-          class="bg-white dark:bg-gray-800 p-4 rounded-md shadow-sm hover:shadow-md transition-shadow border border-gray-200 dark:border-gray-700">
+        <li
+          v-for="tag in tags"
+          :key="tag.id"
+          class="bg-white dark:bg-gray-800 p-4 rounded-md shadow-sm hover:shadow-md transition-shadow border border-gray-200 dark:border-gray-700"
+        >
           <!-- Edit Mode -->
           <div v-if="editingTagId === tag.id" class="flex items-center">
-            <TextInput v-model="editTagName" type="text" name="tagName" :disabled="isSubmitting" />
+            <TextInput
+              v-model="editTagName"
+              type="text"
+              name="tagName"
+              :disabled="isSubmitting"
+            />
             <div class="flex ml-2 space-x-1">
-              <Button variant="icon" size="xs" @click="handleUpdateTag(tag.id!)" :disabled="isSubmitting" title="Save"
-                class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+              <Button
+                variant="icon"
+                size="xs"
+                @click="handleUpdateTag(tag.id!)"
+                :disabled="isSubmitting"
+                title="Save"
+                class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+              >
                 <CheckIcon class="h-5 w-5" />
               </Button>
-              <Button variant="icon" size="xs" @click="cancelEdit" :disabled="isSubmitting" title="Cancel">
+              <Button
+                variant="icon"
+                size="xs"
+                @click="cancelEdit"
+                :disabled="isSubmitting"
+                title="Cancel"
+              >
                 <XIcon class="h-5 w-5" />
               </Button>
             </div>
@@ -254,17 +300,29 @@ const clearSearch = async () => {
               <TagIcon class="h-6 w-6" />
             </div>
             <div class="flex-1">
-              <h3 class="font-medium text-lg text-gray-900 dark:text-gray-100">{{ tag.name }}</h3>
-              <p class="text-sm text-gray-500 dark:text-gray-400">{{ tag.bookmark_count || 0 }} {{
-                t('tags.bookmarks_count')
-                }}</p>
+              <h3 class="font-medium text-lg text-gray-900 dark:text-gray-100">
+                {{ tag.name }}
+              </h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                {{ tag.bookmark_count || 0 }} {{ t('tags.bookmarks_count') }}
+              </p>
             </div>
             <div class="flex space-x-1">
-              <Button variant="icon" size="xs" @click="startEditTag(tag.id!, tag.name!)" :title="t('common.edit')">
+              <Button
+                variant="icon"
+                size="xs"
+                @click="startEditTag(tag.id!, tag.name!)"
+                :title="t('common.edit')"
+              >
                 <PencilIcon class="h-5 w-5" />
               </Button>
-              <Button variant="icon" size="xs" @click="confirmDeleteTag(tag.id!)" :title="t('common.delete')"
-                class="hover:text-red-500 dark:hover:text-red-400">
+              <Button
+                variant="icon"
+                size="xs"
+                @click="confirmDeleteTag(tag.id!)"
+                :title="t('common.delete')"
+                class="hover:text-red-500 dark:hover:text-red-400"
+              >
                 <TrashIcon class="h-5 w-5" />
               </Button>
             </div>
@@ -273,15 +331,27 @@ const clearSearch = async () => {
       </ul>
 
       <!-- Pagination -->
-      <Pagination :current-page="currentPage" :total-items="totalCount" :items-per-page="pageLimit"
-        @page-change="handlePageChange" @per-page-change="handlePerPageChange" />
+      <Pagination
+        :current-page="currentPage"
+        :total-items="totalCount"
+        :items-per-page="pageLimit"
+        @page-change="handlePageChange"
+        @per-page-change="handlePerPageChange"
+      />
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div v-if="tagToDelete !== null" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div
+      v-if="tagToDelete !== null"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
       <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full">
-        <h3 class="text-lg font-medium mb-4 text-gray-900 dark:text-gray-100">{{ t('tags.delete_tag') }}</h3>
-        <p class="mb-6 text-gray-700 dark:text-gray-300">{{ t('tags.confirm_delete') }}</p>
+        <h3 class="text-lg font-medium mb-4 text-gray-900 dark:text-gray-100">
+          {{ t('tags.delete_tag') }}
+        </h3>
+        <p class="mb-6 text-gray-700 dark:text-gray-300">
+          {{ t('tags.confirm_delete') }}
+        </p>
         <div class="flex justify-end space-x-3">
           <Button variant="secondary" @click="tagToDelete = null">
             {{ t('common.cancel') }}

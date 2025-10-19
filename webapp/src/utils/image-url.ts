@@ -38,12 +38,15 @@ export const getBookmarkThumbnailUrl = (bookmarkId: number): string => {
  * @param authToken - The authentication token
  * @returns Promise that resolves to a data URL string
  */
-export const getBookmarkThumbnailDataUrl = async (bookmarkId: number, authToken?: string): Promise<string> => {
+export const getBookmarkThumbnailDataUrl = async (
+  bookmarkId: number,
+  authToken?: string
+): Promise<string> => {
   try {
     const thumbnailUrl = getBookmarkThumbnailUrl(bookmarkId);
 
     const headers: HeadersInit = {
-      'Accept': 'image/*'
+      Accept: 'image/*',
     };
 
     if (authToken) {
@@ -54,7 +57,7 @@ export const getBookmarkThumbnailDataUrl = async (bookmarkId: number, authToken?
     const response = await fetch(thumbnailUrl, {
       method: 'GET',
       headers,
-      credentials: 'include' // Include cookies for session-based auth if needed
+      credentials: 'include', // Include cookies for session-based auth if needed
     });
 
     if (!response.ok) {

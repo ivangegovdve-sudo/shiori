@@ -88,8 +88,12 @@ onMounted(() => {
     <div class="w-full">
       <!-- Loading state -->
       <div v-if="isLoading" class="text-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-        <p class="text-gray-600 dark:text-gray-400">{{ t('common.loading') }}</p>
+        <div
+          class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"
+        ></div>
+        <p class="text-gray-600 dark:text-gray-400">
+          {{ t('common.loading') }}
+        </p>
       </div>
 
       <!-- Error state -->
@@ -103,18 +107,32 @@ onMounted(() => {
       <!-- Content -->
       <div v-else-if="bookmark" class="space-y-6">
         <!-- Header -->
-        <BookmarkDetailHeader :bookmark="bookmark" :show-download-ebook-button="true" :show-view-archive-button="true"
-          @download-ebook="downloadEbook" @view-archive="goToArchive" @open-original="goToOriginal" />
+        <BookmarkDetailHeader
+          :bookmark="bookmark"
+          :show-download-ebook-button="true"
+          :show-view-archive-button="true"
+          @download-ebook="downloadEbook"
+          @view-archive="goToArchive"
+          @open-original="goToOriginal"
+        />
 
         <!-- Content -->
-        <div class=" max-w-4xl mx-auto p-6">
-          <div v-if="hasContent" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+        <div class="max-w-4xl mx-auto p-6">
+          <div
+            v-if="hasContent"
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6"
+          >
             <div class="prose-content max-w-none" v-html="bookmark.html"></div>
           </div>
 
           <!-- No content message -->
-          <div v-else class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 text-center">
-            <p class="text-gray-600 dark:text-gray-400 mb-4">{{ t('bookmarks.no_readable_content') }}</p>
+          <div
+            v-else
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 text-center"
+          >
+            <p class="text-gray-600 dark:text-gray-400 mb-4">
+              {{ t('bookmarks.no_readable_content') }}
+            </p>
             <Button variant="primary" @click="goToOriginal">
               {{ t('bookmarks.view_original_page') }}
             </Button>
@@ -187,7 +205,6 @@ onMounted(() => {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .prose-content h1,
   .prose-content h2,
   .prose-content h3,

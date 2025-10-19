@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 import { TextInput, Button } from '@/components/ui';
 import LanguageSelector from './LanguageSelector.vue';
 import { UserIcon } from '@/components/icons';
@@ -45,7 +45,8 @@ onUnmounted(() => {
 
 <template>
   <header
-    class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between">
+    class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between"
+  >
     <!-- Logo -->
     <div class="flex items-center">
       <div class="text-red-500 font-bold text-xl">栞</div>
@@ -53,8 +54,14 @@ onUnmounted(() => {
 
     <!-- Search -->
     <div class="flex-1 mx-4">
-      <TextInput type="search" variant="search" size="sm" :placeholder="t('bookmarks.search_placeholder')" name="search"
-        autocomplete="off" />
+      <TextInput
+        type="search"
+        variant="search"
+        size="sm"
+        :placeholder="t('bookmarks.search_placeholder')"
+        name="search"
+        autocomplete="off"
+      />
     </div>
 
     <!-- Actions -->
@@ -70,18 +77,25 @@ onUnmounted(() => {
         </Button>
 
         <!-- Dropdown menu -->
-        <div v-if="isMenuOpen"
-          class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 border border-gray-200 dark:border-gray-700">
+        <div
+          v-if="isMenuOpen"
+          class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 border border-gray-200 dark:border-gray-700"
+        >
           <div class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
             {{ authStore.user?.username || 'User' }}
           </div>
-          <RouterLink to="/settings"
-            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+          <RouterLink
+            to="/settings"
+            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
             {{ t('navigation.settings') }}
           </RouterLink>
-          <hr class="border-gray-200 dark:border-gray-700">
-          <a href="#" @click.prevent="handleLogout"
-            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+          <hr class="border-gray-200 dark:border-gray-700" />
+          <a
+            href="#"
+            @click.prevent="handleLogout"
+            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
             {{ t('auth.logout') }}
           </a>
         </div>
