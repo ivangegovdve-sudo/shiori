@@ -96,7 +96,7 @@ swag-fmt:
 
 ## Run linters
 .PHONY: lint
-lint: golangci-lint swag-check
+lint: golangci-lint swag-check webapp-lint webapp-format-check
 
 ## Run golangci-lint
 .PHONY: golangci-lint
@@ -108,20 +108,39 @@ golangci-lint:
 unittest:
 	GO_TEST_FLAGS="$(GO_TEST_FLAGS)" GOTESTFMT_FLAGS="$(GOTESTFMT_FLAGS)" $(BASH) -xe ./scripts/test.sh
 
+## Run all tests (Go + webapp)
+.PHONY: test-all
+test-all: unittest webapp-test
+
 ## Run end to end tests
 .PHONY: e2e
 e2e:
 	$(BASH) -xe ./scripts/e2e.sh
 
-## Build styles
-.PHONY: styles
-styles:
-	CLEANCSS_OPTS=$(CLEANCSS_OPTS) $(BASH) ./scripts/styles.sh
+## Lint webapp
+.PHONY: webapp-lint
+webapp-lint:
+	cd webapp && bun install && bun run lint:check
 
-## Build styles
-.PHONY: styles-check
-styles-check:
-	CLEANCSS_OPTS=$(CLEANCSS_OPTS) $(BASH) ./scripts/styles_check.sh
+## Format webapp code
+.PHONY: webapp-format
+webapp-format:
+	cd webapp && bun install && bun run format
+
+## Check webapp formatting
+.PHONY: webapp-format-check
+webapp-format-check:
+	cd webapp && bun install && bun run format:check
+
+## Test webapp
+.PHONY: webapp-test
+webapp-test:
+	cd webapp && bun install && bun run test:unit
+
+## Type check webapp
+.PHONY: webapp-type-check
+webapp-type-check:
+	cd webapp && bun install && bun run type-check
 
 ## Build binary
 .PHONY: build
