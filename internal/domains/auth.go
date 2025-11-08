@@ -76,9 +76,11 @@ func (d *AuthDomain) CreateTokenForAccount(account *model.AccountDTO, expiration
 		return "", fmt.Errorf("account is nil")
 	}
 
-	claims := jwt.MapClaims{
-		"account": account,
-		"exp":     expiration.UTC().Unix(),
+	claims := JWTClaim{
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expiration.UTC()),
+		},
+		Account: account,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
