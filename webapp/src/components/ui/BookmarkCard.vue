@@ -15,6 +15,8 @@ import type { ModelBookmarkDTO } from '@/client';
 import { useI18n } from 'vue-i18n';
 import { computed, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import { useBookmarksStore } from '@/stores/bookmarks';
+import { useToast } from '@/composables/useToast';
 
 interface Props {
   bookmark: ModelBookmarkDTO;
@@ -32,6 +34,9 @@ const emit = defineEmits<Emits>();
 const { t } = useI18n();
 
 const authStore = useAuthStore();
+const bookmarksStore = useBookmarksStore();
+const { success, error: showErrorToast } = useToast();
+
 const shouldHideExcerpt = computed(
   () => authStore.user?.config?.HideExcerpt === true
 );
@@ -40,14 +45,34 @@ const shouldHideThumbnail = computed(
 );
 
 const showDeleteModal = ref(false);
+const isDeleting = ref(false);
 
 const handleDeleteClick = () => {
   showDeleteModal.value = true;
 };
 
-const handleDeleteConfirm = () => {
-  showDeleteModal.value = false;
-  emit('delete', props.bookmark);
+const handleDeleteConfirm = async () => {
+  if (!props.bookmark.id) return;
+
+  isDeleting.value = true;
+  try {
+    await bookmarksStore.deleteBookmarks([props.bookmark.id]);
+    showDeleteModal.value = false;
+    success(
+      t('bookmarks.toast.deleted_success'),
+      t('bookmarks.toast.deleted_success_message')
+    );
+    // Also emit the delete event for parent components that might need it
+    emit('delete', props.bookmark);
+  } catch (err) {
+    console.error('Failed to delete bookmark:', err);
+    showErrorToast(
+      t('bookmarks.toast.deleted_error'),
+      t('bookmarks.toast.deleted_error_message')
+    );
+  } finally {
+    isDeleting.value = false;
+  }
 };
 
 const handleEditClick = () => {
@@ -150,6 +175,7 @@ const handleEditClick = () => {
     :title="t('bookmarks.delete_bookmark')"
     :message="t('bookmarks.confirm_delete_message')"
     :item-name="props.bookmark.title || props.bookmark.url"
+    :is-loading="isDeleting"
     @close="showDeleteModal = false"
     @confirm="handleDeleteConfirm"
   />

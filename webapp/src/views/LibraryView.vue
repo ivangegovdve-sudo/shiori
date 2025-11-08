@@ -405,7 +405,6 @@ onUnmounted(() => {
           :key="bookmark.id"
           :bookmark="bookmark"
           :auth-token="authStore.token || undefined"
-          @delete="handleDeleteBookmark"
         />
       </div>
 
