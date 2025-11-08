@@ -50,9 +50,11 @@ func (s *HttpServer) Setup(cfg *config.Config, deps *dependencies.Dependencies) 
 		globalMiddleware = append(globalMiddleware, middleware.NewCORSMiddleware(cfg.Http.CORSEnabled, cfg.Http.CORSOrigins, cfg.Http.CORSAllowCredentials))
 
 		// CORS preflight
+		// Note: The CORS middleware already handles OPTIONS requests and writes the header,
+		// so this handler just needs to exist to match the route
 		s.mux.HandleFunc("OPTIONS /", ToHTTPHandler(deps,
 			func(_ model.Dependencies, c model.WebContext) {
-				c.ResponseWriter().WriteHeader(http.StatusOK)
+				// CORS middleware already wrote the header, no need to write it again
 			},
 			globalMiddleware...,
 		))
