@@ -85,7 +85,7 @@
     "visibility_label": "Visibility",
     "visibility_internal": "Internal (accessible to all Shiori users)",
     "visibility_public": "Public (accessible to non-registered users)",
-    "visibility_description": "Internal bookmarks are visible to all registered users. Public bookmarks can be accessed by anyone.",
+    "visibility_description": "Internal bookmarks are visible to all registered users. Public bookmarks can be accessed by anyone with the link.",
     "create_ebook": "Create eBook",
     "view_content": "View Content",
     "download_ebook": "Download eBook",

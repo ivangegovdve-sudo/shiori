@@ -421,6 +421,257 @@ func TestHandleCreateBookmark(t *testing.T) {
 			require.Equal(t, "https://example.com/no-title", value)
 		})
 	})
+
+	t.Run("quick add with URL only", func(t *testing.T) {
+		_, deps := testutil.GetTestConfigurationAndDependencies(t, ctx, logger)
+		payload := `{"url": "https://example.com/quick-add"}`
+		w := testutil.PerformRequest(
+			deps,
+			HandleCreateBookmark,
+			http.MethodPost,
+			"/api/v1/bookmarks",
+			testutil.WithFakeUser(),
+			testutil.WithBody(payload),
+		)
+		require.Equal(t, http.StatusCreated, w.Code)
+
+		response := testutil.NewTestResponseFromRecorder(w)
+		response.AssertOk(t)
+		response.AssertMessageJSONKeyValue(t, "url", func(t *testing.T, value any) {
+			require.Equal(t, "https://example.com/quick-add", value)
+		})
+		// Verify public defaults to 0 (internal) when not provided
+		response.AssertMessageJSONKeyValue(t, "public", func(t *testing.T, value any) {
+			require.Equal(t, float64(0), value) // JSON numbers are float64
+		})
+	})
+
+	t.Run("creation with explicit public=0", func(t *testing.T) {
+		_, deps := testutil.GetTestConfigurationAndDependencies(t, ctx, logger)
+		payload := `{
+			"url": "https://example.com/explicit-private",
+			"title": "Private Bookmark",
+			"public": 0
+		}`
+		w := testutil.PerformRequest(
+			deps,
+			HandleCreateBookmark,
+			http.MethodPost,
+			"/api/v1/bookmarks",
+			testutil.WithFakeUser(),
+			testutil.WithBody(payload),
+		)
+		require.Equal(t, http.StatusCreated, w.Code)
+
+		response := testutil.NewTestResponseFromRecorder(w)
+		response.AssertOk(t)
+		response.AssertMessageJSONKeyValue(t, "public", func(t *testing.T, value any) {
+			require.Equal(t, float64(0), value)
+		})
+	})
+
+	t.Run("creation with explicit public=1", func(t *testing.T) {
+		_, deps := testutil.GetTestConfigurationAndDependencies(t, ctx, logger)
+		payload := `{
+			"url": "https://example.com/explicit-public",
+			"title": "Public Bookmark",
+			"public": 1
+		}`
+		w := testutil.PerformRequest(
+			deps,
+			HandleCreateBookmark,
+			http.MethodPost,
+			"/api/v1/bookmarks",
+			testutil.WithFakeUser(),
+			testutil.WithBody(payload),
+		)
+		require.Equal(t, http.StatusCreated, w.Code)
+
+		response := testutil.NewTestResponseFromRecorder(w)
+		response.AssertOk(t)
+		response.AssertMessageJSONKeyValue(t, "public", func(t *testing.T, value any) {
+			require.Equal(t, float64(1), value)
+		})
+	})
+
+	t.Run("creation with options for archive", func(t *testing.T) {
+		_, deps := testutil.GetTestConfigurationAndDependencies(t, ctx, logger)
+		payload := `{
+			"url": "https://example.com/with-archive",
+			"title": "Bookmark with Archive",
+			"options": {
+				"create_archive": true,
+				"create_ebook": false
+			}
+		}`
+		w := testutil.PerformRequest(
+			deps,
+			HandleCreateBookmark,
+			http.MethodPost,
+			"/api/v1/bookmarks",
+			testutil.WithFakeUser(),
+			testutil.WithBody(payload),
+		)
+		require.Equal(t, http.StatusCreated, w.Code)
+
+		response := testutil.NewTestResponseFromRecorder(w)
+		response.AssertOk(t)
+		response.AssertMessageJSONKeyValue(t, "url", func(t *testing.T, value any) {
+			require.Equal(t, "https://example.com/with-archive", value)
+		})
+	})
+
+	t.Run("creation with options for ebook", func(t *testing.T) {
+		_, deps := testutil.GetTestConfigurationAndDependencies(t, ctx, logger)
+		payload := `{
+			"url": "https://example.com/with-ebook",
+			"title": "Bookmark with Ebook",
+			"options": {
+				"create_archive": false,
+				"create_ebook": true
+			}
+		}`
+		w := testutil.PerformRequest(
+			deps,
+			HandleCreateBookmark,
+			http.MethodPost,
+			"/api/v1/bookmarks",
+			testutil.WithFakeUser(),
+			testutil.WithBody(payload),
+		)
+		require.Equal(t, http.StatusCreated, w.Code)
+
+		response := testutil.NewTestResponseFromRecorder(w)
+		response.AssertOk(t)
+		response.AssertMessageJSONKeyValue(t, "url", func(t *testing.T, value any) {
+			require.Equal(t, "https://example.com/with-ebook", value)
+		})
+	})
+
+	t.Run("quick add with options should not be quick add", func(t *testing.T) {
+		_, deps := testutil.GetTestConfigurationAndDependencies(t, ctx, logger)
+		payload := `{
+			"url": "https://example.com/quick-with-options",
+			"options": {
+				"create_archive": true
+			}
+		}`
+		w := testutil.PerformRequest(
+			deps,
+			HandleCreateBookmark,
+			http.MethodPost,
+			"/api/v1/bookmarks",
+			testutil.WithFakeUser(),
+			testutil.WithBody(payload),
+		)
+		require.Equal(t, http.StatusCreated, w.Code)
+
+		response := testutil.NewTestResponseFromRecorder(w)
+		response.AssertOk(t)
+		response.AssertMessageJSONKeyValue(t, "url", func(t *testing.T, value any) {
+			require.Equal(t, "https://example.com/quick-with-options", value)
+		})
+	})
+}
+
+// TestIsQuickAdd tests the IsQuickAdd method
+func TestIsQuickAdd(t *testing.T) {
+	t.Run("quick add with URL only", func(t *testing.T) {
+		payload := createBookmarkPayload{
+			URL: "https://example.com",
+		}
+		require.True(t, payload.IsQuickAdd())
+	})
+
+	t.Run("not quick add with title", func(t *testing.T) {
+		title := "Test Title"
+		payload := createBookmarkPayload{
+			URL:   "https://example.com",
+			Title: title,
+		}
+		require.False(t, payload.IsQuickAdd())
+	})
+
+	t.Run("not quick add with excerpt", func(t *testing.T) {
+		payload := createBookmarkPayload{
+			URL:     "https://example.com",
+			Excerpt: "Test excerpt",
+		}
+		require.False(t, payload.IsQuickAdd())
+	})
+
+	t.Run("not quick add with public=0", func(t *testing.T) {
+		public := 0
+		payload := createBookmarkPayload{
+			URL:    "https://example.com",
+			Public: &public,
+		}
+		require.False(t, payload.IsQuickAdd())
+	})
+
+	t.Run("not quick add with public=1", func(t *testing.T) {
+		public := 1
+		payload := createBookmarkPayload{
+			URL:    "https://example.com",
+			Public: &public,
+		}
+		require.False(t, payload.IsQuickAdd())
+	})
+
+	t.Run("not quick add with create_archive option", func(t *testing.T) {
+		payload := createBookmarkPayload{
+			URL: "https://example.com",
+			Options: &createBookmarkOptions{
+				CreateArchive: true,
+			},
+		}
+		require.False(t, payload.IsQuickAdd())
+	})
+
+	t.Run("not quick add with create_ebook option", func(t *testing.T) {
+		payload := createBookmarkPayload{
+			URL: "https://example.com",
+			Options: &createBookmarkOptions{
+				CreateEbook: true,
+			},
+		}
+		require.False(t, payload.IsQuickAdd())
+	})
+
+	t.Run("not quick add with both options false", func(t *testing.T) {
+		payload := createBookmarkPayload{
+			URL: "https://example.com",
+			Options: &createBookmarkOptions{
+				CreateArchive: false,
+				CreateEbook:   false,
+			},
+		}
+		// Options object exists but both are false, so it's still quick add
+		require.True(t, payload.IsQuickAdd())
+	})
+
+	t.Run("not quick add with multiple fields", func(t *testing.T) {
+		public := 1
+		payload := createBookmarkPayload{
+			URL:     "https://example.com",
+			Title:   "Test Title",
+			Excerpt: "Test excerpt",
+			Public:  &public,
+			Options: &createBookmarkOptions{
+				CreateArchive: true,
+			},
+		}
+		require.False(t, payload.IsQuickAdd())
+	})
+
+	t.Run("quick add with empty strings", func(t *testing.T) {
+		payload := createBookmarkPayload{
+			URL:     "https://example.com",
+			Title:   "",
+			Excerpt: "   ", // whitespace only
+		}
+		require.True(t, payload.IsQuickAdd())
+	})
 }
 
 func TestHandleListBookmarks(t *testing.T) {

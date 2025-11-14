@@ -524,11 +524,28 @@ func HandleRemoveTagFromBookmark(deps model.Dependencies, c model.WebContext) {
 
 // Bookmark CRUD operations
 
+type createBookmarkOptions struct {
+	CreateArchive bool `json:"create_archive"`
+	CreateEbook   bool `json:"create_ebook"`
+}
+
 type createBookmarkPayload struct {
-	URL     string `json:"url" validate:"required"`
-	Title   string `json:"title"`
-	Excerpt string `json:"excerpt"`
-	Public  int    `json:"public"`
+	URL     string                 `json:"url" validate:"required"`
+	Title   string                 `json:"title,omitempty"`
+	Excerpt string                 `json:"excerpt,omitempty"`
+	Public  *int                   `json:"public,omitempty"`
+	Options *createBookmarkOptions `json:"options,omitempty"`
+}
+
+// IsQuickAdd returns true if only the URL was provided (quick add scenario)
+func (p *createBookmarkPayload) IsQuickAdd() bool {
+	hasTitle := strings.TrimSpace(p.Title) != ""
+	hasExcerpt := strings.TrimSpace(p.Excerpt) != ""
+	hasPublic := p.Public != nil
+	hasOptions := p.Options != nil && (p.Options.CreateArchive || p.Options.CreateEbook)
+
+	// Quick add if only URL is provided (no title, excerpt, public flag, or options)
+	return !hasTitle && !hasExcerpt && !hasPublic && !hasOptions
 }
 
 func (p *createBookmarkPayload) IsValid() error {
@@ -572,7 +589,13 @@ func HandleCreateBookmark(deps model.Dependencies, c model.WebContext) {
 		URL:     payload.URL,
 		Title:   payload.Title,
 		Excerpt: payload.Excerpt,
-		Public:  payload.Public,
+	}
+
+	// Set Public field if provided, otherwise default to 0 (internal)
+	if payload.Public != nil {
+		bookmark.Public = *payload.Public
+	} else {
+		bookmark.Public = 0
 	}
 
 	// If title is not provided, default to URL
@@ -595,7 +618,51 @@ func HandleCreateBookmark(deps model.Dependencies, c model.WebContext) {
 		return
 	}
 
-	response.SendJSON(c, http.StatusCreated, createdBookmark)
+	// Process bookmark to create readable content and optionally archive/ebook
+	// This matches the behavior of the legacy API
+	userHasDefinedTitle := strings.TrimSpace(payload.Title) != ""
+	userHasDefinedExcerpt := strings.TrimSpace(payload.Excerpt) != ""
+
+	// Set flags for archive/ebook creation from options
+	// Default behavior: always create archive unless explicitly disabled
+	if payload.Options != nil {
+		// Use explicit options if provided
+		createdBookmark.CreateArchive = payload.Options.CreateArchive
+		createdBookmark.CreateEbook = payload.Options.CreateEbook
+	} else {
+		// No options provided - default to creating archive (matches legacy API behavior)
+		createdBookmark.CreateArchive = true
+		createdBookmark.CreateEbook = false
+	}
+
+	// Update bookmark cache to process content
+	// Keep metadata if user provided title or excerpt (UpdateBookmarkCache uses same flag for both)
+	// For quick add, always extract metadata from the page
+	keepMetadata := userHasDefinedTitle || userHasDefinedExcerpt
+	processedBookmark, err := deps.Domains().Bookmarks().UpdateBookmarkCache(
+		c.Request().Context(),
+		*createdBookmark,
+		keepMetadata,
+		false, // Don't skip existing
+	)
+	if err != nil {
+		// Log error but don't fail the request - bookmark was created successfully
+		deps.Logger().WithError(err).Warn("failed to process bookmark content, bookmark was still created")
+		// Return the created bookmark without processed content
+		response.SendJSON(c, http.StatusCreated, createdBookmark)
+		return
+	}
+
+	// Save the processed bookmark back to database
+	updatedBookmark, err := deps.Domains().Bookmarks().UpdateBookmark(c.Request().Context(), processedBookmark.Bookmark)
+	if err != nil {
+		deps.Logger().WithError(err).Warn("failed to save processed bookmark, returning created bookmark")
+		// Return the created bookmark even if saving processed version failed
+		response.SendJSON(c, http.StatusCreated, createdBookmark)
+		return
+	}
+
+	response.SendJSON(c, http.StatusCreated, updatedBookmark)
 }
 
 // HandleListBookmarks lists bookmarks with optional filtering

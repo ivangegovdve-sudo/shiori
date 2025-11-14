@@ -83,46 +83,28 @@ const handleEditClick = () => {
 <template>
   <div
     class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer flex flex-col h-full"
-    @click="$router.push(`/bookmark/${props.bookmark.id}/content`)"
-  >
+    @click="$router.push(`/bookmark/${props.bookmark.id}/content`)">
     <!-- Image at the top -->
-    <div
-      v-if="!shouldHideThumbnail && props.bookmark.hasThumbnail"
-      class="aspect-[2/1] bg-gray-100 dark:bg-gray-700 flex-shrink-0"
-    >
-      <BookmarkThumbnail
-        :bookmark="props.bookmark"
-        size="large"
-        class="w-full h-full"
-      />
+    <div v-if="!shouldHideThumbnail && props.bookmark.hasThumbnail"
+      class="aspect-[2/1] bg-gray-100 dark:bg-gray-700 flex-shrink-0">
+      <BookmarkThumbnail :bookmark="props.bookmark" size="large" class="w-full h-full" />
     </div>
 
     <!-- Content area that grows to fill space -->
     <div class="p-4 flex flex-col flex-grow">
       <!-- Title -->
       <div class="flex items-start justify-between gap-2 mb-2">
-        <h3
-          class="text-blue-600 dark:text-blue-400 font-medium text-sm line-clamp-2 flex-1"
-        >
+        <h3 class="text-blue-600 dark:text-blue-400 font-medium text-sm line-clamp-2 flex-1">
           {{ props.bookmark.title || props.bookmark.url }}
         </h3>
         <!-- Feature icons -->
         <div class="flex items-center gap-1 flex-shrink-0">
-          <FileTextIcon
-            v-if="props.bookmark.hasContent"
-            class="h-3 w-3 text-gray-500 dark:text-gray-400"
-            :title="t('bookmarks.has_readable_content')"
-          />
-          <ArchiveIcon
-            v-if="props.bookmark.hasArchive"
-            class="h-3 w-3 text-gray-500 dark:text-gray-400"
-            :title="t('bookmarks.has_archive')"
-          />
-          <BookIcon
-            v-if="props.bookmark.hasEbook"
-            class="h-3 w-3 text-gray-500 dark:text-gray-400"
-            :title="t('bookmarks.has_ebook')"
-          />
+          <FileTextIcon v-if="props.bookmark.hasContent" class="h-3 w-3 text-gray-500 dark:text-gray-400"
+            :title="t('bookmarks.has_readable_content')" />
+          <ArchiveIcon v-if="props.bookmark.hasArchive" class="h-3 w-3 text-gray-500 dark:text-gray-400"
+            :title="t('bookmarks.has_archive')" />
+          <BookIcon v-if="props.bookmark.hasEbook" class="h-3 w-3 text-gray-500 dark:text-gray-400"
+            :title="t('bookmarks.has_ebook')" />
         </div>
       </div>
 
@@ -132,24 +114,15 @@ const handleEditClick = () => {
       </div>
 
       <!-- Excerpt -->
-      <div
-        v-if="props.bookmark.excerpt && !shouldHideExcerpt"
-        class="text-gray-600 dark:text-gray-400 text-xs line-clamp-2 flex-grow"
-      >
+      <div v-if="props.bookmark.excerpt && !shouldHideExcerpt"
+        class="text-gray-600 dark:text-gray-400 text-xs line-clamp-2 flex-grow">
         {{ props.bookmark.excerpt }}
       </div>
     </div>
 
     <!-- Actions pinned to bottom -->
     <div class="px-4 pb-4 flex justify-end space-x-2">
-      <Button
-        v-if="props.bookmark.url"
-        variant="icon"
-        size="xs"
-        :href="props.bookmark.url"
-        target="_blank"
-        @click.stop
-      >
+      <Button v-if="props.bookmark.url" variant="icon" size="xs" :href="props.bookmark.url" target="_blank" @click.stop>
         <span class="sr-only">{{ t('bookmarks.open_original_url') }}</span>
         <ExternalLinkIcon class="h-4 w-4" />
       </Button>
@@ -157,12 +130,8 @@ const handleEditClick = () => {
         <span class="sr-only">{{ t('bookmarks.edit_bookmark_action') }}</span>
         <PencilIcon class="h-4 w-4" />
       </Button>
-      <Button
-        variant="icon"
-        size="xs"
-        @click.stop="handleDeleteClick"
-        class="hover:text-red-500 dark:hover:text-red-400"
-      >
+      <Button variant="icon" size="xs" @click.stop="handleDeleteClick"
+        class="hover:text-red-500 dark:hover:text-red-400">
         <span class="sr-only">{{ t('bookmarks.delete_bookmark_action') }}</span>
         <TrashIcon class="h-4 w-4" />
       </Button>
@@ -170,15 +139,9 @@ const handleEditClick = () => {
   </div>
 
   <!-- Delete Confirmation Modal -->
-  <DeleteConfirmationModal
-    :is-open="showDeleteModal"
-    :title="t('bookmarks.delete_bookmark')"
-    :message="t('bookmarks.confirm_delete_message')"
-    :item-name="props.bookmark.title || props.bookmark.url"
-    :is-loading="isDeleting"
-    @close="showDeleteModal = false"
-    @confirm="handleDeleteConfirm"
-  />
+  <DeleteConfirmationModal :is-open="showDeleteModal" :title="t('bookmarks.delete_bookmark')"
+    :message="t('bookmarks.confirm_delete_message')" :item-name="props.bookmark.title || props.bookmark.url"
+    :is-loading="isDeleting" @close="showDeleteModal = false" @confirm="handleDeleteConfirm" />
 </template>
 
 <style scoped>

@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { ApiV1CreateBookmarkOptions } from './ApiV1CreateBookmarkOptions';
+import {
+    ApiV1CreateBookmarkOptionsFromJSON,
+    ApiV1CreateBookmarkOptionsFromJSONTyped,
+    ApiV1CreateBookmarkOptionsToJSON,
+    ApiV1CreateBookmarkOptionsToJSONTyped,
+} from './ApiV1CreateBookmarkOptions';
+
 /**
  * 
  * @export
@@ -25,6 +33,12 @@ export interface ApiV1CreateBookmarkPayload {
      * @memberof ApiV1CreateBookmarkPayload
      */
     excerpt?: string;
+    /**
+     * 
+     * @type {ApiV1CreateBookmarkOptions}
+     * @memberof ApiV1CreateBookmarkPayload
+     */
+    options?: ApiV1CreateBookmarkOptions;
     /**
      * 
      * @type {number}
@@ -64,6 +78,7 @@ export function ApiV1CreateBookmarkPayloadFromJSONTyped(json: any, ignoreDiscrim
     return {
         
         'excerpt': json['excerpt'] == null ? undefined : json['excerpt'],
+        'options': json['options'] == null ? undefined : ApiV1CreateBookmarkOptionsFromJSON(json['options']),
         '_public': json['public'] == null ? undefined : json['public'],
         'title': json['title'] == null ? undefined : json['title'],
         'url': json['url'],
@@ -82,6 +97,7 @@ export function ApiV1CreateBookmarkPayloadToJSONTyped(value?: ApiV1CreateBookmar
     return {
         
         'excerpt': value['excerpt'],
+        'options': ApiV1CreateBookmarkOptionsToJSON(value['options']),
         'public': value['_public'],
         'title': value['title'],
         'url': value['url'],

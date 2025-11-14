@@ -13,6 +13,7 @@ src/index.ts
 src/models/ApiV1BookmarkDataResponse.ts
 src/models/ApiV1BookmarkTagPayload.ts
 src/models/ApiV1BulkUpdateBookmarkTagsPayload.ts
+src/models/ApiV1CreateBookmarkOptions.ts
 src/models/ApiV1CreateBookmarkPayload.ts
 src/models/ApiV1DeleteBookmarksPayload.ts
 src/models/ApiV1InfoResponse.ts

@@ -3,6 +3,7 @@
 export * from './ApiV1BookmarkDataResponse';
 export * from './ApiV1BookmarkTagPayload';
 export * from './ApiV1BulkUpdateBookmarkTagsPayload';
+export * from './ApiV1CreateBookmarkOptions';
 export * from './ApiV1CreateBookmarkPayload';
 export * from './ApiV1DeleteBookmarksPayload';
 export * from './ApiV1InfoResponse';

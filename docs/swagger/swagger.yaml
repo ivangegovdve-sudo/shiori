@@ -41,10 +41,19 @@ definitions:
     - bookmark_ids
     - tag_ids
     type: object
+  api_v1.createBookmarkOptions:
+    properties:
+      create_archive:
+        type: boolean
+      create_ebook:
+        type: boolean
+    type: object
   api_v1.createBookmarkPayload:
     properties:
       excerpt:
         type: string
+      options:
+        $ref: '#/definitions/api_v1.createBookmarkOptions'
       public:
         type: integer
       title:

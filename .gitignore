@@ -35,3 +35,4 @@ docs/.venv
 build/docs
 
 node_modules
+webapp/pkg

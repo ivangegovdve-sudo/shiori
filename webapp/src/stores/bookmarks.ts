@@ -89,20 +89,42 @@ export const useBookmarksStore = defineStore('bookmarks', () => {
     url: string,
     title?: string,
     excerpt?: string,
-    isPublic?: number
+    isPublic?: number,
+    options?: {
+      createArchive?: boolean;
+      createEbook?: boolean;
+    }
   ) => {
     isLoading.value = true;
     error.value = null;
 
     try {
       const api = getBookmarksApi();
+      const payload: any = {
+        url,
+      };
+
+      // Only include fields if they are provided
+      if (title !== undefined) {
+        payload.title = title;
+      }
+      if (excerpt !== undefined) {
+        payload.excerpt = excerpt;
+      }
+      if (isPublic !== undefined) {
+        payload.public = isPublic;
+      }
+
+      // Add options if provided
+      if (options) {
+        payload.options = {
+          create_archive: options.createArchive || false,
+          create_ebook: options.createEbook || false,
+        };
+      }
+
       const newBookmark = await api.apiV1BookmarksPost({
-        payload: {
-          url,
-          title,
-          excerpt,
-          _public: isPublic,
-        },
+        payload,
       });
 
       bookmarks.value.unshift(newBookmark);

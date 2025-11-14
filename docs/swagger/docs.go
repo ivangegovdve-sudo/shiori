@@ -1105,6 +1105,17 @@ const docTemplate = `{
                 }
             }
         },
+        "api_v1.createBookmarkOptions": {
+            "type": "object",
+            "properties": {
+                "create_archive": {
+                    "type": "boolean"
+                },
+                "create_ebook": {
+                    "type": "boolean"
+                }
+            }
+        },
         "api_v1.createBookmarkPayload": {
             "type": "object",
             "required": [
@@ -1113,6 +1124,9 @@ const docTemplate = `{
             "properties": {
                 "excerpt": {
                     "type": "string"
+                },
+                "options": {
+                    "$ref": "#/definitions/api_v1.createBookmarkOptions"
                 },
                 "public": {
                     "type": "integer"
